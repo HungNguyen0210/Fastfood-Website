@@ -31,7 +31,7 @@ export const createAccount = async (req, res) => {
 // 2. Lấy tất cả tài khoản (Read)
 export const getAllAccounts = async (req, res) => {
   try {
-    const accounts = await Account.find();
+    const accounts = await Account.find().select("-password");
     return res.status(200).json(accounts);
   } catch (error) {
     console.error(error);
@@ -43,7 +43,7 @@ export const getAllAccounts = async (req, res) => {
 export const getAccountById = async (req, res) => {
   const { id } = req.params;
   try {
-    const account = await Account.findById(id);
+    const account = await Account.findById(id).select("-password");
     if (!account) {
       return res.status(404).json({ message: "Tài khoản không tồn tại" });
     }
