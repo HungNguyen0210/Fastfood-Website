@@ -8,7 +8,9 @@ export const createAccount = async (req, res) => {
     // Kiểm tra nếu tài khoản đã tồn tại
     const existingUser = await Account.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "Tài khoản đã tồn tại" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Tài khoản đã tồn tại" });
     }
 
     const newAccount = new Account({
@@ -19,14 +21,16 @@ export const createAccount = async (req, res) => {
       address,
       role,
     });
-
     await newAccount.save();
-    return res
-      .status(201)
-      .json({ message: "Thêm tài khoản thành công", account: newAccount });
+
+    return res.status(201).json({
+      success: true,
+      message: "Tạo tài khoản thành công",
+      account: newAccount,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi server" });
+    return res.status(500).json({ success: false, message: "Lỗi server" });
   }
 };
 
@@ -34,10 +38,14 @@ export const createAccount = async (req, res) => {
 export const getAllAccounts = async (req, res) => {
   try {
     const accounts = await Account.find().select("-password");
-    return res.status(200).json(accounts);
+    return res.status(200).json({
+      success: true,
+      message: "Lấy danh sách tài khoản thành công",
+      accounts,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi server" });
+    return res.status(500).json({ success: false, message: "Lỗi server" });
   }
 };
 
@@ -47,12 +55,18 @@ export const getAccountById = async (req, res) => {
   try {
     const account = await Account.findById(id).select("-password");
     if (!account) {
-      return res.status(404).json({ message: "Tài khoản không tồn tại" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Tài khoản không tồn tại" });
     }
-    return res.status(200).json(account);
+    return res.status(200).json({
+      success: true,
+      message: "Lấy thông tin tài khoản thành công",
+      account,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi server" });
+    return res.status(500).json({ success: false, message: "Lỗi server" });
   }
 };
 
@@ -65,19 +79,23 @@ export const updateAccount = async (req, res) => {
     const updatedAccount = await Account.findByIdAndUpdate(
       id,
       { username, email, phone, address, role },
-      { new: true } // Trả về bản cập nhật mới
+      { new: true }
     );
 
     if (!updatedAccount) {
-      return res.status(404).json({ message: "Tài khoản không tồn tại" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Tài khoản không tồn tại" });
     }
 
-    return res
-      .status(200)
-      .json({ message: "Cập nhật thành công", account: updatedAccount });
+    return res.status(200).json({
+      success: true,
+      message: "Cập nhật thành công",
+      account: updatedAccount,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi server" });
+    return res.status(500).json({ success: false, message: "Lỗi server" });
   }
 };
 
@@ -89,12 +107,16 @@ export const deleteAccount = async (req, res) => {
     const deletedAccount = await Account.findByIdAndDelete(id);
 
     if (!deletedAccount) {
-      return res.status(404).json({ message: "Tài khoản không tồn tại" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Tài khoản không tồn tại" });
     }
 
-    return res.status(200).json({ message: "Tài khoản đã bị xóa" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Tài khoản đã bị xóa" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Lỗi server" });
+    return res.status(500).json({ success: false, message: "Lỗi server" });
   }
 };
