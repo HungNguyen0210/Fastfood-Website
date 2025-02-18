@@ -12,7 +12,7 @@ export const createProduct = async (req, res) => {
       isAvailable,
     } = req.body;
 
-    const existingProduct = await Product.findOne({ name });
+    const existingProduct = await Product.findOne({ name, category });
     if (existingProduct)
       return res.status(400).json({ message: "Sản phẩm đã tồn tại" });
 
@@ -37,10 +37,13 @@ export const createProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find()
+    const product = await Product.find()
       .sort({ createdAt: -1 })
       .populate("category");
-    res.status(200).json({ message: "Lấy thành công", products });
+    if (!product) {
+      return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+    }
+    res.status(200).json({ message: "Lấy sản phẩm thành công", product });
   } catch (error) {
     res.status(500).json({ message: "Lỗi server" });
   }
@@ -49,7 +52,10 @@ export const getAllProducts = async (req, res) => {
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate("category");
-    res.status(200).json({ message: "Lấy thành công", product });
+    if (!product) {
+      return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+    }
+    res.status(200).json({ message: "Lấy sản phẩm thành công", product });
   } catch (error) {
     res.status(500).json({ message: "Lỗi server" });
   }
