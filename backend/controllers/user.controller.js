@@ -27,3 +27,16 @@ export const login = async (req, res) => {
     return res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+    res.status(200).json({ message: "Đăng xuất thành công" });
+  } catch (error) {
+    res.status(500).json({ message: "Đăng xuất thất bại" });
+  }
+};
