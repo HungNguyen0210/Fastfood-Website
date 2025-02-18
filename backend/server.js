@@ -6,12 +6,17 @@ import userRoutes from "./routes/user.route.js";
 import { connectDB } from "./config/db.js";
 import productRoutes from "./routes/product.route.js";
 import categoryRoutes from "./routes/category.route.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(express.json());
 app.use(cors());
 dotenv.config();
-
+app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use("/api", accountRoutes);
 app.use("/api", userRoutes);
 app.use("/api", productRoutes);
