@@ -19,7 +19,7 @@ export const createCategory = async (req, res) => {
     await newCategory.save();
     res.status(201).json({
       success: true,
-      category: newCategory,
+      data: newCategory,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi server" });
@@ -32,7 +32,7 @@ export const getAllCategories = async (req, res) => {
     const categories = await Category.find().sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
-      categories,
+      data: categories,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi server" });
@@ -48,7 +48,7 @@ export const getCategoryById = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Danh mục không tồn tại" });
     }
-    res.status(200).json({ success: true, category });
+    res.status(200).json({ success: true, data: category });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi server" });
   }
@@ -73,7 +73,7 @@ export const updateCategory = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      category: updatedCategory,
+      data: updatedCategory,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi server" });

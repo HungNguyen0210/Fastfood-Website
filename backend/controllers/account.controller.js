@@ -25,8 +25,7 @@ export const createAccount = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Tạo tài khoản thành công",
-      account: newAccount,
+      data: newAccount,
     });
   } catch (error) {
     console.error(error);
@@ -40,8 +39,7 @@ export const getAllAccounts = async (req, res) => {
     const accounts = await Account.find().select("-password");
     return res.status(200).json({
       success: true,
-      message: "Lấy danh sách tài khoản thành công",
-      accounts,
+      data: accounts,
     });
   } catch (error) {
     console.error(error);
@@ -61,8 +59,7 @@ export const getAccountById = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message: "Lấy thông tin tài khoản thành công",
-      account,
+      data: account,
     });
   } catch (error) {
     console.error(error);
@@ -90,8 +87,7 @@ export const updateAccount = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Cập nhật thành công",
-      account: updatedAccount,
+      data: updatedAccount,
     });
   } catch (error) {
     console.error(error);

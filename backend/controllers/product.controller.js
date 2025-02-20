@@ -1,5 +1,5 @@
 import Product from "../models/product.model.js";
-
+import { upload } from "../middleware/multer.js";
 export const createProduct = async (req, res) => {
   upload.single("image")(req, res, async (err) => {
     if (err) {
@@ -7,7 +7,7 @@ export const createProduct = async (req, res) => {
     }
 
     try {
-      const { name, price, sellprice, category, description, isAvailable } =
+      const { name, price, sellPrice, category, description, isAvailable } =
         req.body;
       const image = req.file ? req.file.filename : req.body.image;
 
@@ -21,7 +21,7 @@ export const createProduct = async (req, res) => {
         name,
         image,
         price,
-        sellprice,
+        sellPrice,
         category,
         description,
         isAvailable,
@@ -67,7 +67,7 @@ export const getAllProducts = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      products: productsWithImage,
+      data: productsWithImage,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi server", error });
@@ -90,7 +90,7 @@ export const getProductById = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      product: { ...product.toObject(), image: imageUrl },
+      data: { ...product.toObject(), image: imageUrl },
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Lỗi server", error });
@@ -107,7 +107,7 @@ export const updateProduct = async (req, res) => {
       const {
         name,
         price,
-        sellprice,
+        sellPrice,
         category,
         description,
         isAvailable,
@@ -131,7 +131,7 @@ export const updateProduct = async (req, res) => {
           name,
           image: updatedImage,
           price,
-          sellprice,
+          sellPrice,
           category,
           description,
           isAvailable,
@@ -141,7 +141,7 @@ export const updateProduct = async (req, res) => {
 
       res.status(200).json({
         success: true,
-        product: {
+        data: {
           ...updatedProduct.toObject(),
           image: `http://localhost:5000/assets/${updatedProduct.image}`,
         },
