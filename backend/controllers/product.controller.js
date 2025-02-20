@@ -1,3 +1,5 @@
+import Product from "../models/product.model.js";
+
 export const createProduct = async (req, res) => {
   upload.single("image")(req, res, async (err) => {
     if (err) {
