@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import News from "./pages/News";
 import Login from "./components/Login";
+import AdminLayout from "./layouts/AdminLayout";
+import Dashboard from "./pages/admin/Dashboard";
 
 function App() {
   return (
@@ -18,6 +20,10 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route path="news" element={<News />} />
           <Route path="menu" element={<Menu />} />
+        </Route>
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
         </Route>
       </Routes>
     </Router>

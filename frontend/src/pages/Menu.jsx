@@ -7,12 +7,9 @@ const Menu = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("📢 useEffect chạy...");
     const fetchProducts = async () => {
       try {
-        console.log("Fetching data...");
         const response = await axios.get("http://localhost:5000/api/products");
-        console.log("API Response:", response.data.data);
         if (response.data.success) {
           setProducts(response.data.data);
         } else {
