@@ -5,9 +5,11 @@ import ManageAccount from "../pages/admin/ManageAccount";
 import ManageProduct from "../pages/admin/ManageProduct";
 import ManageCategory from "../pages/admin/ManageCategory";
 import ManageNews from "../pages/admin/ManageNews";
+import AdminNavbar from "../components/AdminNavbar";
 
 const AdminLayout = () => {
   const [activePage, setActivePage] = useState("account");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const sidebarItems = {
     account: <ManageAccount />,
@@ -16,18 +18,25 @@ const AdminLayout = () => {
     news: <ManageNews />,
   };
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-gray-800 text-white p4">
-        <h1 className="text-xl">Admin Dashboard</h1>
-      </header>
-      <div className="flex">
-        <AdminSidebar setActivePage={setActivePage} />
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <AdminSidebar
+        setActivePage={setActivePage}
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
+      />
 
-        <div className="flex-1 p-5">{sidebarItems[activePage]}</div>
+      {/* Main content */}
+      <div className="flex-1 flex flex-col">
+        {/* Navbar */}
+        <AdminNavbar />
+
+        {/* Nội dung chính */}
+        <div className="p-5">{sidebarItems[activePage]}</div>
+        <main className="p-4">
+          <Outlet />
+        </main>
       </div>
-      <main className="p-4">
-        <Outlet />
-      </main>
     </div>
   );
 };

@@ -1,37 +1,56 @@
-const AdminSidebar = ({ setActivePage }) => {
+import { FaBars } from "react-icons/fa"; // Import icon
+import { FaUser, FaBox, FaThLarge, FaNewspaper } from "react-icons/fa";
+
+const AdminSidebar = ({ setActivePage, isCollapsed, setIsCollapsed }) => {
   return (
-    <div className="w-64 min-h-screen bg-gray-800 text-white p-5">
+    <div
+      className={`bg-gray-800 text-white transition-all duration-300 ${
+        isCollapsed ? "w-16" : "w-64"
+      } min-h-screen p-4`}
+    >
+      {/* Nút thu nhỏ/phóng to */}
+      <button
+        className="text-white mb-6 block focus:outline-none"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
+        <FaBars size={20} />
+      </button>
+
       <ul className="space-y-4">
         <li>
           <button
             onClick={() => setActivePage("account")}
-            className="block w-full text-left hover:text-yellow-400"
+            className="flex items-center space-x-2 w-full text-left hover:text-yellow-400"
           >
-            Account
+            <FaUser />
+            {!isCollapsed && <span>Account</span>}
           </button>
         </li>
         <li>
           <button
             onClick={() => setActivePage("product")}
-            className="block w-full text-left hover:text-yellow-400"
+            className="flex items-center space-x-2 w-full text-left hover:text-yellow-400"
           >
-            Product
+            <FaBox />
+            {!isCollapsed && <span>Product</span>}
           </button>
         </li>
         <li>
           <button
             onClick={() => setActivePage("category")}
-            className="block w-full text-left hover:text-yellow-400"
+            className="flex items-center space-x-2 w-full text-left hover:text-yellow-400"
           >
-            Category
+            <FaThLarge />
+            {!isCollapsed && <span>Category</span>}
           </button>
         </li>
         <li>
           <button
             onClick={() => setActivePage("news")}
-            className="block w-full text-left hover:text-yellow-400"
+            className="flex items-center space-x-2 w-full text-left hover:text-yellow-400"
           >
-            News
+            <FaNewspaper />
+            {!isCollapsed && <span>News</span>}
           </button>
         </li>
       </ul>
