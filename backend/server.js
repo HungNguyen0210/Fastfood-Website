@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
   origin: "http://localhost:5173", // Origin cụ thể của React frontend
   credentials: true, // Cho phép gửi cookie, token

@@ -47,7 +47,11 @@ const ManageProduct = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === "isAvailable" ? Number(value) : value, // Đảm bảo status là số
+    });
   };
 
   const handleSubmit = async () => {
@@ -87,7 +91,7 @@ const ManageProduct = () => {
       sellPrice: product.sellPrice,
       category: product.category,
       description: product.description,
-      status: product.status,
+      isAvailable: product.isAvailable,
     });
     setIsModalOpen(true);
   };
@@ -100,7 +104,7 @@ const ManageProduct = () => {
       sellPrice: "",
       category: "",
       description: "",
-      status: 1,
+      isAvailable: 1,
     });
     setEditingId(null);
   };

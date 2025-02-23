@@ -15,7 +15,10 @@ const ProductTable = ({ products, handleEdit }) => {
           <tr key={product._id} className="text-center">
             <td className="border p-2">{product.name}</td>
             <td className="border p-2">{product.sellPrice}</td>
-            <td className="border p-2">{product.category.name}</td>
+            <td className="border p-2">
+              {/* Kiểm tra category trước khi lấy name */}
+              {product.category ? product.category.name : "Không có danh mục"}
+            </td>
             <td className="border p-2">
               {product.isAvailable === 1 ? "Hiện" : "Ẩn"}
             </td>

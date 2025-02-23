@@ -69,8 +69,8 @@ const ProductForm = ({
         }
         className="p-2 border rounded"
       >
-        <option value={1}>Hiện</option>
         <option value={0}>Ẩn</option>
+        <option value={1}>Hiện</option>
       </select>
       <button
         onClick={handleSubmit}
@@ -80,6 +80,36 @@ const ProductForm = ({
       >
         {editingId ? "Cập nhật" : "Thêm sản phẩm"}
       </button>
+
+      {/* Xem trước sản phẩm */}
+      <div className="border p-4 mt-4 rounded shadow-md">
+        <h3 className="text-lg font-semibold">Xem trước sản phẩm</h3>
+        {formData.image && (
+          <img
+            src={formData.image}
+            alt="Preview"
+            className="w-32 h-32 object-cover mx-auto my-2 border"
+          />
+        )}
+        <p>
+          <strong>Tên:</strong> {formData.name || "Chưa có"}
+        </p>
+        <p>
+          <strong>Giá bán:</strong> {formData.sellPrice || "Chưa có"}
+        </p>
+        <p>
+          <strong>Danh mục:</strong>{" "}
+          {categories.find((c) => c._id === formData.category)?.name ||
+            "Chưa chọn"}
+        </p>
+        <p>
+          <strong>Mô tả:</strong> {formData.description || "Chưa có"}
+        </p>
+        <p>
+          <strong>Trạng thái:</strong>{" "}
+          {formData.isAvailable === 1 ? "Hiện" : "Ẩn"}
+        </p>
+      </div>
     </div>
   );
 };
