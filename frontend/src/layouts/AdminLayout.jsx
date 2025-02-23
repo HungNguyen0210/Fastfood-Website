@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ManageAccount from "../pages/admin/Account";
 import ManageProduct from "../pages/admin/Product";
 import ManageCategory from "../pages/admin/Category";
@@ -8,8 +8,14 @@ import ManageNews from "../pages/admin/News";
 import AdminNavbar from "../components/AdminNavbar";
 
 const AdminLayout = () => {
-  const [activePage, setActivePage] = useState("account");
+  const [activePage, setActivePage] = useState(
+    localStorage.getItem("activePage") || "account"
+  );
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("activePage", activePage); // Lưu vào localStorage khi activePage thay đổi
+  }, [activePage]);
 
   const sidebarItems = {
     account: <ManageAccount />,

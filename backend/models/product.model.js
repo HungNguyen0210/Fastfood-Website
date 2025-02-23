@@ -12,7 +12,7 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     description: { type: String },
-    isAvailable: { type: Boolean, default: true },
+    isAvailable: { type: Number, default: true },
   },
   {
     timestamps: true,

@@ -1,7 +1,12 @@
-import { FaBars } from "react-icons/fa"; // Import icon
-import { FaUser, FaBox, FaThLarge, FaNewspaper } from "react-icons/fa";
+import { FaBars, FaUser, FaBox, FaThLarge, FaNewspaper } from "react-icons/fa";
 
 const AdminSidebar = ({ setActivePage, isCollapsed, setIsCollapsed }) => {
+  // Hàm thay đổi trang và lưu vào localStorage
+  const handlePageChange = (page) => {
+    setActivePage(page);
+    localStorage.setItem("activePage", page); // Lưu vào localStorage
+  };
+
   return (
     <div
       className={`bg-gray-800 text-white transition-all duration-300 ${
@@ -19,7 +24,7 @@ const AdminSidebar = ({ setActivePage, isCollapsed, setIsCollapsed }) => {
       <ul className="space-y-4">
         <li>
           <button
-            onClick={() => setActivePage("account")}
+            onClick={() => handlePageChange("account")}
             className="flex items-center space-x-2 w-full text-left px-3 py-2 border-l-4 border-transparent hover:border-yellow-400 hover:text-yellow-400 transition-all cursor-pointer"
           >
             <FaUser />
@@ -28,7 +33,7 @@ const AdminSidebar = ({ setActivePage, isCollapsed, setIsCollapsed }) => {
         </li>
         <li>
           <button
-            onClick={() => setActivePage("product")}
+            onClick={() => handlePageChange("product")}
             className="flex items-center space-x-2 w-full text-left px-3 py-2 border-l-4 border-transparent hover:border-yellow-400 hover:text-yellow-400 transition-all cursor-pointer"
           >
             <FaBox />
@@ -37,7 +42,7 @@ const AdminSidebar = ({ setActivePage, isCollapsed, setIsCollapsed }) => {
         </li>
         <li>
           <button
-            onClick={() => setActivePage("category")}
+            onClick={() => handlePageChange("category")}
             className="flex items-center space-x-2 w-full text-left px-3 py-2 border-l-4 border-transparent hover:border-yellow-400 hover:text-yellow-400 transition-all cursor-pointer"
           >
             <FaThLarge />
@@ -46,7 +51,7 @@ const AdminSidebar = ({ setActivePage, isCollapsed, setIsCollapsed }) => {
         </li>
         <li>
           <button
-            onClick={() => setActivePage("news")}
+            onClick={() => handlePageChange("news")}
             className="flex items-center space-x-2 w-full text-left px-3 py-2 border-l-4 border-transparent hover:border-yellow-400 hover:text-yellow-400 transition-all cursor-pointer"
           >
             <FaNewspaper />
