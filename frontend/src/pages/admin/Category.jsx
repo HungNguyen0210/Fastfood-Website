@@ -1,7 +1,11 @@
-import React from "react";
+import ManageCategory from "../../components/Category/ManageCategory";
 
-const ManageCategory = () => {
-  return <div>ManageCategory</div>;
+const Category = () => {
+  return (
+    <div className="p-4">
+      <ManageCategory />
+    </div>
+  );
 };
 
-export default ManageCategory;
+export default Category;
