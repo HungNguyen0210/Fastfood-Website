@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
-import Home from "./pages/Home";
-import Menu from "./pages/Menu";
-import News from "./pages/News";
+import Home from "./pages/MainHome";
+import Menu from "./pages/MainMenu";
+import News from "./pages/MainNews";
 import Login from "./components/Login";
 import AdminLayout from "./layouts/AdminLayout";
 
