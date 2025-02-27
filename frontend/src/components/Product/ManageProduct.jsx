@@ -29,8 +29,15 @@ const ManageProduct = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(API_URL);
-      setProducts(response.data.data);
+      console.log("Dữ liệu API trả về:", response.data.data); // Debug dữ liệu API
+
+      if (Array.isArray(response.data.data)) {
+        setProducts(response.data.data);
+      } else {
+        setProducts([]); // Đảm bảo luôn có giá trị mảng
+      }
     } catch (error) {
+      console.error("Lỗi khi tải danh sách sản phẩm:", error);
       toast.error("Lỗi khi tải danh sách sản phẩm!");
     }
   };
@@ -58,26 +65,22 @@ const ManageProduct = () => {
     try {
       const updatedData = {
         ...formData,
-        isAvailable: Number(formData.isAvailable), // Đảm bảo giá trị là 0 hoặc 1
+        isAvailable: Number(formData.isAvailable), // Đảm bảo giá trị là số
       };
 
       if (editingId) {
         await axios.put(`${API_URL}/${editingId}`, updatedData);
-        setProducts((prev) =>
-          prev.map((product) =>
-            product._id === editingId ? { ...product, ...updatedData } : product
-          )
-        );
         toast.success("Cập nhật sản phẩm thành công!");
       } else {
-        const response = await axios.post(API_URL, updatedData);
-        setProducts([...products, response.data.data]);
+        await axios.post(API_URL, updatedData);
         toast.success("Thêm sản phẩm thành công!");
       }
 
       resetForm();
       setIsModalOpen(false);
+      fetchProducts(); // Gọi lại API để cập nhật danh sách thay vì setProducts thủ công
     } catch (error) {
+      console.error("Lỗi khi xử lý sản phẩm:", error);
       toast.error("Lỗi khi xử lý sản phẩm!");
     }
   };

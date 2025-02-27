@@ -123,7 +123,7 @@ export const updateProduct = async (req, res) => {
 
       const updatedImage = req.file
         ? req.file.filename
-        : image || existingProduct.image;
+        : existingProduct.image.replace("http://localhost:5000/assets/", "");
 
       const updatedProduct = await Product.findByIdAndUpdate(
         req.params.id,

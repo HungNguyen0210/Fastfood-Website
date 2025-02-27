@@ -12,10 +12,14 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
 
       if (response.data.success) {
         toast.success("Đăng nhập thành công!");

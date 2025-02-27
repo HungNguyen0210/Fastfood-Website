@@ -13,14 +13,13 @@ const ProductTable = ({ products, handleEdit }) => {
       <tbody>
         {products.map((product) => (
           <tr key={product._id} className="text-center">
-            <td className="border p-2">{product.name}</td>
-            <td className="border p-2">{product.sellPrice}</td>
+            <td className="border p-2">{product.name || "Không có tên"}</td>
+            <td className="border p-2">{product.sellPrice || "N/A"}</td>
             <td className="border p-2">
-              {/* Kiểm tra category trước khi lấy name */}
-              {product.category ? product.category.name : "Không có danh mục"}
+              {product.category?.name || "Không có danh mục"}
             </td>
             <td className="border p-2">
-              {product.isAvailable === 1 ? "Hiện" : "Ẩn"}
+              {product.isAvailable ? "Hiện" : "Ẩn"}
             </td>
             <td className="border p-2">
               <button
