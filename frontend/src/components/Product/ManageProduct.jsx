@@ -16,7 +16,7 @@ const ManageProduct = () => {
     sellPrice: "",
     category: "",
     description: "",
-    status: 1, // 1 = Hiện, 0 = Ẩn
+    isAvailable: 1, // 1 = Hiện, 0 = Ẩn
   });
   const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +42,18 @@ const ManageProduct = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image: file, // Lưu file để gửi lên server
+        previewImage: URL.createObjectURL(file), // Tạo URL preview
+      }));
+    }
+  };
+
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
@@ -63,39 +75,74 @@ const ManageProduct = () => {
 
   const handleSubmit = async () => {
     try {
-      const updatedData = {
-        ...formData,
-        isAvailable: Number(formData.isAvailable), // Đảm bảo giá trị là số
-      };
+      if (!formData.image) {
+        toast.error("Vui lòng chọn ảnh trước khi tải lên!");
+        return;
+      }
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("price", formData.price);
+      formDataToSend.append("sellPrice", formData.sellPrice);
+      formDataToSend.append(
+        "category",
+        formData.category._id || formData.category
+      );
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("isAvailable", formData.isAvailable);
+
+      if (formData.image instanceof File) {
+        formDataToSend.append("image", formData.image); // Chỉ gửi file mới
+      }
 
       if (editingId) {
-        await axios.put(`${API_URL}/${editingId}`, updatedData);
+        await axios.put(`${API_URL}/${editingId}`, formDataToSend, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         toast.success("Cập nhật sản phẩm thành công!");
       } else {
-        await axios.post(API_URL, updatedData);
+        await axios.post(API_URL, formDataToSend, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         toast.success("Thêm sản phẩm thành công!");
       }
 
       resetForm();
       setIsModalOpen(false);
-      fetchProducts(); // Gọi lại API để cập nhật danh sách thay vì setProducts thủ công
+      fetchProducts();
     } catch (error) {
-      console.error("Lỗi khi xử lý sản phẩm:", error);
       toast.error("Lỗi khi xử lý sản phẩm!");
     }
   };
 
   const handleEdit = (product) => {
+    const IMAGE_API_URL = import.meta.env.VITE_IMAGE_API_URL;
+
     setEditingId(product._id);
     setFormData({
       name: product.name,
-      image: product.image,
+      image: product.image, // Lưu ảnh cũ (có thể là string hoặc File)
+      originalImageName: product.image,
+      previewImage: product.image?.startsWith("http")
+        ? product.image // Nếu đã có http, giữ nguyên
+        : `${IMAGE_API_URL}/assets/${product.image}`,
       price: product.price,
       sellPrice: product.sellPrice,
-      category: product.category,
+      category: product.category?._id || product.category,
       description: product.description,
       isAvailable: product.isAvailable,
     });
+
+    console.log(
+      "Preview Image URL:",
+      product.image
+        ? `${IMAGE_API_URL}/assets/${product.image}`
+        : "Không có ảnh"
+    );
+    console.log(
+      "Product Image URL:",
+      `${IMAGE_API_URL}/assets/${product.image}`
+    );
+
     setIsModalOpen(true);
   };
 
@@ -139,6 +186,7 @@ const ManageProduct = () => {
               formData={formData}
               handleChange={handleChange}
               handleSubmit={handleSubmit}
+              handleFileChange={handleFileChange}
               categories={categories}
               editingId={editingId}
             />

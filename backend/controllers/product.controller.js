@@ -1,49 +1,43 @@
 import Product from "../models/product.model.js";
-import { upload } from "../middleware/multer.js";
+import fs from "fs";
+import path from "path";
+
 export const createProduct = async (req, res) => {
-  upload.single("image")(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({ success: false, message: err });
-    }
+  try {
+    const { name, price, sellPrice, category, description, isAvailable } =
+      req.body;
+    const image = req.file ? req.file.filename : req.body.image;
 
-    try {
-      const { name, price, sellPrice, category, description, isAvailable } =
-        req.body;
-      const image = req.file ? req.file.filename : req.body.image;
+    const existingProduct = await Product.findOne({ name, category });
+    if (existingProduct)
+      return res
+        .status(400)
+        .json({ success: false, message: "Sản phẩm đã tồn tại" });
 
-      const existingProduct = await Product.findOne({ name, category });
-      if (existingProduct)
-        return res
-          .status(400)
-          .json({ success: false, message: "Sản phẩm đã tồn tại" });
+    const newProduct = new Product({
+      name,
+      image,
+      price,
+      sellPrice,
+      category,
+      description,
+      isAvailable,
+    });
 
-      const newProduct = new Product({
-        name,
-        image,
-        price,
-        sellPrice,
-        category,
-        description,
-        isAvailable,
-      });
+    await newProduct.save();
 
-      await newProduct.save();
+    const imageUrl = image ? `http://localhost:5000/assets/${image}` : null;
 
-      const imageUrl = newProduct.image
-        ? `http://localhost:5000/assets/${newProduct.image}`
-        : null;
-
-      res.status(201).json({
-        success: true,
-        product: {
-          ...newProduct.toObject(),
-          image: imageUrl,
-        },
-      });
-    } catch (error) {
-      res.status(500).json({ success: false, message: "Lỗi server", error });
-    }
-  });
+    res.status(201).json({
+      success: true,
+      product: {
+        ...newProduct.toObject(),
+        image: imageUrl,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Lỗi server", error });
+  }
 };
 
 export const getAllProducts = async (req, res) => {
@@ -98,60 +92,51 @@ export const getProductById = async (req, res) => {
 };
 
 export const updateProduct = async (req, res) => {
-  upload.single("image")(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({ success: false, message: err.message });
+  try {
+    console.log("Received PUT request for product:", req.params.id);
+    console.log("Request body:", req.body);
+    console.log("Uploaded file:", req.file);
+
+    const { name, price, sellPrice, category, description, isAvailable } =
+      req.body;
+
+    const existingProduct = await Product.findById(req.params.id);
+    if (!existingProduct) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Không tìm thấy sản phẩm" });
     }
 
-    try {
-      const {
+    let updatedImage = existingProduct.image;
+
+    if (req.file) {
+      updatedImage = req.file.filename;
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
         name,
+        image: updatedImage,
         price,
         sellPrice,
         category,
         description,
         isAvailable,
-        image,
-      } = req.body;
+      },
+      { new: true }
+    );
 
-      const existingProduct = await Product.findById(req.params.id);
-      if (!existingProduct) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Không tìm thấy sản phẩm" });
-      }
-
-      const updatedImage = req.file
-        ? req.file.filename
-        : existingProduct.image.replace("http://localhost:5000/assets/", "");
-
-      const updatedProduct = await Product.findByIdAndUpdate(
-        req.params.id,
-        {
-          name,
-          image: updatedImage,
-          price,
-          sellPrice,
-          category,
-          description,
-          isAvailable,
-        },
-        { new: true }
-      );
-
-      res.status(200).json({
-        success: true,
-        data: {
-          ...updatedProduct.toObject(),
-          image: `http://localhost:5000/assets/${updatedProduct.image}`,
-        },
-      });
-    } catch (error) {
-      res
-        .status(500)
-        .json({ success: false, message: "Lỗi server", error: error.message });
-    }
-  });
+    res.status(200).json({
+      success: true,
+      data: updatedProduct,
+    });
+  } catch (error) {
+    console.error("Update product error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi server", error: error.message });
+  }
 };
 
 export const deleteProduct = async (req, res) => {

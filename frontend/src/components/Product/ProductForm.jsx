@@ -4,6 +4,7 @@ const ProductForm = ({
   handleSubmit,
   categories,
   editingId,
+  handleFileChange,
 }) => {
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -15,14 +16,52 @@ const ProductForm = ({
         placeholder="Tên sản phẩm"
         className="p-2 border rounded"
       />
-      <input
-        type="text"
-        name="image"
-        value={formData.image}
-        onChange={handleChange}
-        placeholder="URL hình ảnh"
-        className="p-2 border rounded"
-      />
+      <div className="flex items-center gap-3">
+        {/* Button chọn file */}
+        <button
+          type="button"
+          onClick={() => document.getElementById("fileInput").click()}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Thêm ảnh
+        </button>
+
+        {/* Input file bị ẩn */}
+        <input
+          id="fileInput"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
+        {/* Hiển thị tên ảnh nếu có */}
+        {formData.image && !(formData.image instanceof File) ? (
+          <span className="text-gray-700">
+            {formData.image.replace(/^.*[\\/]/, "")} {/* Loại bỏ đường dẫn */}
+          </span>
+        ) : formData.previewImage ? (
+          <span className="text-gray-700">Ảnh mới được chọn</span>
+        ) : null}
+      </div>
+
+      {/* Hiển thị ảnh preview */}
+      {formData.previewImage ? (
+        <img
+          src={formData.previewImage}
+          alt="Ảnh xem trước"
+          className="w-32 h-32 object-cover rounded mt-2"
+          onError={(e) => (e.target.style.display = "none")}
+        />
+      ) : formData.image && !(formData.image instanceof File) ? (
+        <img
+          src={`${import.meta.env.VITE_IMAGE_API_URL}/assets/${formData.image}`}
+          alt="Ảnh sản phẩm"
+          className="w-32 h-32 object-cover rounded mt-2"
+          onError={(e) => (e.target.style.display = "none")}
+        />
+      ) : null}
+
       <input
         type="number"
         name="price"
@@ -41,7 +80,7 @@ const ProductForm = ({
       />
       <select
         name="category"
-        value={formData.category}
+        value={formData.category || ""}
         onChange={handleChange}
         className="p-2 border rounded"
       >

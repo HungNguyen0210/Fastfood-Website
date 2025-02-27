@@ -1,26 +1,35 @@
 import multer from "multer";
-// Cấu hình Multer
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs"; // Import thư viện file system
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "backend/assets/");
-  },
+  destination: path.join(__dirname, "../assets"),
   filename: (req, file, cb) => {
-    const originalName = file.originalname;
-    cb(null, originalName);
+    let filePath = path.join(__dirname, "../assets", file.originalname);
+
+    // Nếu file đã tồn tại, thêm hậu tố `_new`
+    let count = 1;
+    while (fs.existsSync(filePath)) {
+      const ext = path.extname(file.originalname);
+      const fileName = path.basename(file.originalname, ext);
+      filePath = path.join(
+        __dirname,
+        "../assets",
+        `${fileName}_${count}${ext}`
+      );
+      count++;
+    }
+
+    cb(null, path.basename(filePath)); // Trả về tên file mới
   },
 });
 
-// Kiểm tra file ảnh
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only JPEG, PNG, and JPG files are allowed!"), false);
-  }
-};
-
 export const upload = multer({
   storage,
-  fileFilter,
+  fileFilter: (req, file, cb) =>
+    cb(null, ["image/jpeg", "image/png", "image/jpg"].includes(file.mimetype)),
 });
