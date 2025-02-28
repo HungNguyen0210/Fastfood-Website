@@ -57,7 +57,7 @@ const ManageCategory = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id) => { 
     try {
       await axios.delete(`${API_URL}/${id}`);
       setCategories((prev) => prev.filter((cat) => cat._id !== id));

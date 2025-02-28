@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const API_URL = import.meta.env.VITE_API_URL + "/products";
+
 const Menu = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +11,7 @@ const Menu = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get(API_URL);
         if (response.data.success) {
           setProducts(response.data.data);
         } else {

@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
-import AdminSidebar from "../components/AdminSidebar";
+import AdminSidebar from "../components/common/AdminSidebar";
 import { useEffect, useState } from "react";
-import ManageAccount from "../pages/admin/Account";
-import ManageProduct from "../pages/admin/Product";
-import ManageCategory from "../pages/admin/Category";
-import ManageNews from "../pages/admin/News";
-import AdminNavbar from "../components/AdminNavbar";
+import ManageAccount from "../pages/AdminPage/Account";
+import ManageProduct from "../pages/AdminPage/Product";
+import ManageCategory from "../pages/AdminPage/Category";
+import ManageNews from "../pages/AdminPage/News";
+import AdminNavbar from "../components/common/AdminNavbar";
 
 const AdminLayout = () => {
   const [activePage, setActivePage] = useState(

@@ -29,7 +29,6 @@ const ManageProduct = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(API_URL);
-      console.log("Dữ liệu API trả về:", response.data.data); // Debug dữ liệu API
 
       if (Array.isArray(response.data.data)) {
         setProducts(response.data.data);
@@ -160,7 +159,7 @@ const ManageProduct = () => {
   };
 
   return (
-    <div className="p-5 bg-white rounded-lg shadow-md">
+    <div className="p-5 bg-white rounded-lg shadow-md h-[80vh] overflow-auto">
       <h2 className="text-2xl font-bold mb-4">Quản lý Sản phẩm</h2>
 
       <button

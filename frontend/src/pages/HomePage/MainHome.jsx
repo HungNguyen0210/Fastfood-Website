@@ -1,3 +1,5 @@
+import ProductList from "../../components/ProductList";
+
 const Home = () => {
   return (
     <div className="container mx-auto py-10">
@@ -7,6 +9,7 @@ const Home = () => {
       <p className="text-center mt-4">
         Nơi bạn tìm thấy những món ăn nhanh ngon nhất.
       </p>
+      <ProductList />
     </div>
   );
 };

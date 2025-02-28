@@ -1,6 +1,4 @@
 import Product from "../models/product.model.js";
-import fs from "fs";
-import path from "path";
 
 export const createProduct = async (req, res) => {
   try {
@@ -152,5 +150,34 @@ export const deleteProduct = async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Lỗi khi xóa sản phẩm!", error });
+  }
+};
+export const getProductByIsAvailable = async (req, res) => {
+  try {
+    const products = await Product.find({ isAvailable: 1 })
+      .sort({ createdAt: -1 })
+      .populate("category");
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Không có sản phẩm nào phù hợp",
+      });
+    }
+
+    // Cập nhật đường dẫn hình ảnh sản phẩm
+    const productsWithImage = products.map((product) => {
+      const imageUrl = product.image
+        ? `http://localhost:5000/assets/${product.image}`
+        : null;
+      return { ...product.toObject(), image: imageUrl };
+    });
+
+    res.status(200).json({
+      success: true,
+      data: productsWithImage,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Lỗi server", error });
   }
 };
